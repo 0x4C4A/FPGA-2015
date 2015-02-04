@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.11"
+    ComputedModelVersion    "1.35"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -38,9 +38,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "user"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Jan 28 09:36:24 2015"
-  RTWModifiedTimeStamp	  344336174
-  ModelVersionFormat	  "1.%<AutoIncrement:11>"
+  LastModifiedDate	  "Wed Feb 04 15:56:31 2015"
+  RTWModifiedTimeStamp	  344961844
+  ModelVersionFormat	  "1.%<AutoIncrement:35>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -79,7 +79,7 @@ Model {
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
     model_		    "LD1"
     signals_		    []
-    overrideMode_	    [0U]
+    overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
       Dimension		      1
@@ -146,7 +146,7 @@ Model {
 	  StartTime		  "0.0"
 	  StopTime		  "7.0"
 	  AbsTol		  "auto"
-	  FixedStep		  "1e-3"
+	  FixedStep		  "1e-4"
 	  InitialStep		  "auto"
 	  MaxNumMinSteps	  "-1"
 	  MaxOrder		  5
@@ -638,7 +638,7 @@ Model {
       }
       Name		      "Configuration"
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition     [ 199, 177, 1081, 833 ] 
+      ConfigPrmDlgPosition     [ 198, 157, 1082, 839 ] 
     }
     PropName		    "ConfigurationSets"
   }
@@ -696,6 +696,28 @@ Model {
       DisplayOption	      "none"
       OutDataTypeStr	      "Inherit: auto"
       NonVirtualBus	      off
+    }
+    Block {
+      BlockType		      Constant
+      Value		      "1"
+      VectorParams1D	      on
+      SamplingMode	      "Sample based"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: Inherit from 'Constant value'"
+      LockScale		      off
+      SampleTime	      "inf"
+      FramePeriod	      "inf"
+      PreserveConstantTs      off
+    }
+    Block {
+      BlockType		      DeadZone
+      LowerValue	      "-0.5"
+      UpperValue	      "0.5"
+      SaturateOnIntegerOverflow	on
+      LinearizeAsGain	      on
+      ZeroCross		      on
+      SampleTime	      "-1"
     }
     Block {
       BlockType		      Fcn
@@ -771,6 +793,15 @@ Model {
       SampleTime	      "-1"
     }
     Block {
+      BlockType		      SignalGenerator
+      WaveForm		      "sine"
+      TimeSource	      "Use simulation time"
+      Amplitude		      "1"
+      Frequency		      "1"
+      Units		      "Hertz"
+      VectorParams1D	      on
+    }
+    Block {
       BlockType		      Sin
       SineType		      "Time based"
       TimeSource	      "Use simulation time"
@@ -806,10 +837,41 @@ Model {
       Variant		      off
       GeneratePreprocessorConditionals off
     }
+    Block {
+      BlockType		      Sum
+      IconShape		      "rectangular"
+      Inputs		      "++"
+      CollapseMode	      "All dimensions"
+      CollapseDim	      "1"
+      InputSameDT	      on
+      AccumDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: Same as first input"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+      SampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Switch
+      Criteria		      "u2 >= Threshold"
+      Threshold		      "0"
+      InputSameDT	      on
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+      ZeroCross		      on
+      SampleTime	      "-1"
+      AllowDiffInputSizes     off
+    }
   }
   System {
     Name		    "LD1"
-    Location		    [359, 138, 939, 398]
+    Location		    [278, 234, 1233, 757]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -823,24 +885,81 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "28"
+    SIDHighWatermark	    "88"
     Block {
       BlockType		      BusCreator
       Name		      "Bus\nCreator"
       SID		      "26"
-      Ports		      [2, 1]
-      Position		      [345, 121, 350, 159]
+      Ports		      [3, 1]
+      Position		      [460, 121, 465, 159]
       ZOrder		      -2
       ShowName		      off
-      Inputs		      "2"
+      Inputs		      "3"
       DisplayOption	      "bar"
     }
     Block {
+      BlockType		      BusCreator
+      Name		      "Bus\nCreator1"
+      SID		      "66"
+      Ports		      [3, 1]
+      Position		      [795, 131, 800, 169]
+      ZOrder		      -2
+      ShowName		      off
+      Inputs		      "3"
+      DisplayOption	      "bar"
+    }
+    Block {
+      BlockType		      Product
+      Name		      "Compressor Product"
+      SID		      "30"
+      Ports		      [2, 1]
+      Position		      [370, 22, 400, 53]
+      ZOrder		      -13
+      InputSameDT	      off
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Scope
+      Name		      "Compressor Scope"
+      SID		      "27"
+      Ports		      [1]
+      Position		      [505, 124, 535, 156]
+      ZOrder		      -16
+      Floating		      off
+      Location		      [64, 147, 845, 811]
+      Open		      on
+      NumInputPorts	      "1"
+      ZoomMode		      "xonly"
+      List {
+	ListType		AxesTitles
+	axes1			"%<SignalLabel>"
+      }
+      List {
+	ListType		ScopeGraphics
+	FigureColor		"[0.501960784313725 0.501960784313725 0.501960784313725]"
+	AxesColor		"[0 0 0]"
+	AxesTickColor		"[1 1 1]"
+	LineColors		"[1 1 0;1 0 1;0 1 1;1 0 0;0 1 0;0 0 1]"
+	LineStyles		"-|-|-|-|-|-"
+	LineWidths		"[0.5 0.5 0.5 0.5 0.5 0.5]"
+	MarkerStyles		"none|none|none|none|none|none"
+      }
+      ShowLegends	      on
+      LegendLocations	      "0.65461     0.84864     0.29898    0.099774"
+      TimeRange		      "2.8"
+      YMin		      "-1.25"
+      YMax		      "2.25"
+      DataFormat	      "StructureWithTime"
+      MaxDataPoints	      "100000"
+      SampleTime	      "0"
+    }
+    Block {
       BlockType		      SubSystem
-      Name		      "Compressor"
+      Name		      "Compressor envelope generator "
       SID		      "11"
       Ports		      [1, 1]
-      Position		      [190, 69, 290, 111]
+      Position		      [195, 69, 295, 111]
       ZOrder		      -17
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
@@ -849,9 +968,24 @@ Model {
       Opaque		      off
       RequestExecContextInheritance off
       MaskHideContents	      off
+      MaskPromptString	      "Scale coefficient|Filter cutoff (Hz)|Input signal dead zone level"
+      MaskStyleString	      "edit,edit,edit"
+      MaskVariables	      "S_tr=@1;cutoff_frequency=@2;dead_zone=@3;"
+      MaskTunableValueString  "on,on,on"
+      MaskCallbackString      "||"
+      MaskEnableString	      "on,on,on"
+      MaskVisibilityString    "on,on,on"
+      MaskToolTipString	      "on,on,on"
+      MaskDisplay	      "Ain = linspace(1, 1e4, 100);\nAout = log10(Ain);\n\nplot(Ain, Aout);"
+      MaskIconFrame	      on
+      MaskIconOpaque	      on
+      MaskIconRotate	      "none"
+      MaskPortRotate	      "default"
+      MaskIconUnits	      "autoscale"
+      MaskValueString	      "40|5|0.01"
       System {
-	Name			"Compressor"
-	Location		[589, 190, 1087, 490]
+	Name			"Compressor envelope generator "
+	Location		[-1, 109, 668, 409]
 	Open			on
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -881,8 +1015,33 @@ Model {
 	  SaturateOnIntegerOverflow off
 	}
 	Block {
+	  BlockType		  Fcn
+	  Name			  "Coefficient\ngenerator"
+	  SID			  "28"
+	  Position		  [310, 30, 370, 60]
+	  ZOrder		  -1
+	  Expr			  "log10(S_tr*u+1)/(u*log10(S_tr+1))"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "Constant"
+	  SID			  "39"
+	  Position		  [325, 150, 355, 180]
+	  ZOrder		  -5
+	  Value			  "0"
+	}
+	Block {
+	  BlockType		  DeadZone
+	  Name			  "Dead Zone"
+	  SID			  "42"
+	  Position		  [325, 95, 355, 125]
+	  ZOrder		  -3
+	  LowerValue		  "-dead_zone"
+	  UpperValue		  "dead_zone"
+	}
+	Block {
 	  BlockType		  Reference
-	  Name			  "Analog\nFilter Design"
+	  Name			  "Individual sinusoid \nsmoother"
 	  SID			  "17"
 	  Ports			  [1, 1]
 	  Position		  [225, 84, 285, 136]
@@ -893,26 +1052,67 @@ Model {
 	  method		  "Butterworth"
 	  filttype		  "Lowpass"
 	  N			  "1"
-	  Wlo			  "1*2*pi"
+	  Wlo			  "cutoff_frequency*2*pi"
 	  Whi			  "80"
 	  Rp			  "2"
 	  Rs			  "40"
 	}
 	Block {
-	  BlockType		  Fcn
-	  Name			  "Fcn"
-	  SID			  "28"
-	  Position		  [305, 95, 365, 125]
+	  BlockType		  Reference
+	  Name			  "Signal jump snubber"
+	  SID			  "43"
+	  Ports			  [1, 1]
+	  Position		  [490, 84, 550, 136]
 	  ZOrder		  -1
-	  Expr			  "log10(1+u)"
+	  LibraryVersion	  "1.320"
+	  SourceBlock		  "dsparch4/Analog\nFilter Design"
+	  SourceType		  "Analog Filter Design"
+	  method		  "Butterworth"
+	  filttype		  "Lowpass"
+	  N			  "1"
+	  Wlo			  "cutoff_frequency/2*2*pi"
+	  Whi			  "80"
+	  Rp			  "2"
+	  Rs			  "40"
+	}
+	Block {
+	  BlockType		  Switch
+	  Name			  "Switch"
+	  SID			  "38"
+	  Position		  [395, 90, 445, 130]
+	  ZOrder		  -18
+	  Criteria		  "u2 ~= 0"
+	  InputSameDT		  off
+	  SaturateOnIntegerOverflow off
 	}
 	Block {
 	  BlockType		  Outport
 	  Name			  "Output"
 	  SID			  "13"
-	  Position		  [395, 103, 425, 117]
+	  Position		  [580, 103, 610, 117]
 	  ZOrder		  -2
 	  IconDisplay		  "Port number"
+	}
+	Line {
+	  SrcBlock		  "Abs"
+	  SrcPort		  1
+	  DstBlock		  "Individual sinusoid \nsmoother"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Individual sinusoid \nsmoother"
+	  SrcPort		  1
+	  Points		  [0, 0]
+	  Branch {
+	    Points		    [0, -65]
+	    DstBlock		    "Coefficient\ngenerator"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Labels		    [1, 0]
+	    DstBlock		    "Dead Zone"
+	    DstPort		    1
+	  }
 	}
 	Line {
 	  SrcBlock		  "Input"
@@ -921,19 +1121,33 @@ Model {
 	  DstPort		  1
 	}
 	Line {
-	  SrcBlock		  "Abs"
+	  SrcBlock		  "Coefficient\ngenerator"
 	  SrcPort		  1
-	  DstBlock		  "Analog\nFilter Design"
+	  Points		  [5, 0]
+	  DstBlock		  "Switch"
 	  DstPort		  1
 	}
 	Line {
-	  SrcBlock		  "Analog\nFilter Design"
+	  SrcBlock		  "Constant"
 	  SrcPort		  1
-	  DstBlock		  "Fcn"
+	  Points		  [20, 0]
+	  DstBlock		  "Switch"
+	  DstPort		  3
+	}
+	Line {
+	  SrcBlock		  "Dead Zone"
+	  SrcPort		  1
+	  DstBlock		  "Switch"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Switch"
+	  SrcPort		  1
+	  DstBlock		  "Signal jump snubber"
 	  DstPort		  1
 	}
 	Line {
-	  SrcBlock		  "Fcn"
+	  SrcBlock		  "Signal jump snubber"
 	  SrcPort		  1
 	  DstBlock		  "Output"
 	  DstPort		  1
@@ -941,14 +1155,25 @@ Model {
       }
     }
     Block {
+      BlockType		      Product
+      Name		      "Expander Product"
+      SID		      "64"
+      Ports		      [2, 1]
+      Position		      [745, 42, 775, 73]
+      ZOrder		      -13
+      InputSameDT	      off
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
       BlockType		      Scope
-      Name		      "Scope"
-      SID		      "27"
+      Name		      "Expander Scope"
+      SID		      "65"
       Ports		      [1]
-      Position		      [390, 124, 420, 156]
+      Position		      [830, 134, 860, 166]
       ZOrder		      -16
       Floating		      off
-      Location		      [188, 390, 969, 795]
+      Location		      [450, 486, 1231, 982]
       Open		      on
       NumInputPorts	      "1"
       List {
@@ -957,7 +1182,7 @@ Model {
       }
       List {
 	ListType		ScopeGraphics
-	FigureColor		"[0.5 0.5 0.5]"
+	FigureColor		"[0.501960784313725 0.501960784313725 0.501960784313725]"
 	AxesColor		"[0 0 0]"
 	AxesTickColor		"[1 1 1]"
 	LineColors		"[1 1 0;1 0 1;0 1 1;1 0 0;0 1 0;0 0 1]"
@@ -965,17 +1190,22 @@ Model {
 	LineWidths		"[0.5 0.5 0.5 0.5 0.5 0.5]"
 	MarkerStyles		"none|none|none|none|none|none"
       }
-      ShowLegends	      off
+      ShowLegends	      on
+      LegendLocations	      "0.67446     0.79809     0.28233     0.13357"
+      TimeRange		      "2.8"
+      YMin		      "-1.2"
+      YMax		      "1.2"
+      SaveName		      "ScopeData1"
       DataFormat	      "StructureWithTime"
-      MaxDataPoints	      "10000"
+      MaxDataPoints	      "100000"
       SampleTime	      "0"
     }
     Block {
       BlockType		      SubSystem
-      Name		      "Test signal"
-      SID		      "9"
-      Ports		      [0, 1]
-      Position		      [100, 67, 140, 113]
+      Name		      "Expander envelope generator"
+      SID		      "61"
+      Ports		      [1, 1]
+      Position		      [595, 75, 685, 135]
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
       RTWSystemCode	      "Auto"
@@ -983,10 +1213,249 @@ Model {
       Opaque		      off
       RequestExecContextInheritance off
       MaskHideContents	      off
+      MaskPromptString	      "Expansion coefficient|Filter cutoff (Hz)|Input signal dead zone level"
+      MaskStyleString	      "edit,edit,edit"
+      MaskVariables	      "S_tr=@1;cutoff_frequency=@2;dead_zone=@3;"
+      MaskTunableValueString  "on,on,on"
+      MaskCallbackString      "||"
+      MaskEnableString	      "on,on,on"
+      MaskVisibilityString    "on,on,on"
+      MaskToolTipString	      "on,on,on"
+      MaskDisplay	      "x = linspace(0,5,1000)\ny = exp(x)\nplot(x,y)"
+      MaskIconFrame	      on
+      MaskIconOpaque	      on
+      MaskIconRotate	      "none"
+      MaskPortRotate	      "default"
+      MaskIconUnits	      "autoscale"
+      MaskValueString	      "40|5|0.01"
+      System {
+	Name			"Expander envelope generator"
+	Location		[1, 463, 662, 841]
+	Open			on
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "In1"
+	  SID			  "62"
+	  Position		  [40, 93, 70, 107]
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Abs
+	  Name			  "Abs"
+	  SID			  "56"
+	  Position		  [95, 85, 125, 115]
+	  ZOrder		  -1
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "Constant"
+	  SID			  "73"
+	  Position		  [250, 145, 280, 175]
+	  ZOrder		  -5
+	  Value			  "0"
+	}
+	Block {
+	  BlockType		  DeadZone
+	  Name			  "Dead Zone"
+	  SID			  "74"
+	  Position		  [250, 85, 280, 115]
+	  ZOrder		  -3
+	  LowerValue		  "-dead_zone"
+	  UpperValue		  "dead_zone"
+	}
+	Block {
+	  BlockType		  Fcn
+	  Name			  "Exponentiator"
+	  SID			  "59"
+	  Position		  [235, 25, 295, 55]
+	  ZOrder		  -1
+	  Expr			  "(10^(u*log10(S_tr+1))-1)/(u*S_tr)"
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Individual sinusoid\nsmoother"
+	  SID			  "57"
+	  Ports			  [1, 1]
+	  Position		  [145, 74, 205, 126]
+	  ZOrder		  -1
+	  LibraryVersion	  "1.320"
+	  SourceBlock		  "dsparch4/Analog\nFilter Design"
+	  SourceType		  "Analog Filter Design"
+	  method		  "Butterworth"
+	  filttype		  "Lowpass"
+	  N			  "1"
+	  Wlo			  "cutoff_frequency*2*pi"
+	  Whi			  "80"
+	  Rp			  "2"
+	  Rs			  "40"
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Signal jump \nsnubber"
+	  SID			  "77"
+	  Ports			  [1, 1]
+	  Position		  [390, 74, 450, 126]
+	  ZOrder		  -1
+	  LibraryVersion	  "1.320"
+	  SourceBlock		  "dsparch4/Analog\nFilter Design"
+	  SourceType		  "Analog Filter Design"
+	  method		  "Butterworth"
+	  filttype		  "Lowpass"
+	  N			  "1"
+	  Wlo			  "cutoff_frequency/2*2*pi"
+	  Whi			  "80"
+	  Rp			  "2"
+	  Rs			  "40"
+	}
+	Block {
+	  BlockType		  Switch
+	  Name			  "Switch"
+	  SID			  "75"
+	  Position		  [315, 80, 365, 120]
+	  ZOrder		  -18
+	  Criteria		  "u2 ~= 0"
+	  InputSameDT		  off
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out1"
+	  SID			  "63"
+	  Position		  [470, 93, 500, 107]
+	  IconDisplay		  "Port number"
+	}
+	Line {
+	  SrcBlock		  "In1"
+	  SrcPort		  1
+	  DstBlock		  "Abs"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Exponentiator"
+	  SrcPort		  1
+	  DstBlock		  "Switch"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Constant"
+	  SrcPort		  1
+	  Points		  [15, 0]
+	  DstBlock		  "Switch"
+	  DstPort		  3
+	}
+	Line {
+	  SrcBlock		  "Dead Zone"
+	  SrcPort		  1
+	  DstBlock		  "Switch"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Individual sinusoid\nsmoother"
+	  SrcPort		  1
+	  Points		  [5, 0]
+	  Branch {
+	    DstBlock		    "Dead Zone"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Points		    [0, -60]
+	    DstBlock		    "Exponentiator"
+	    DstPort		    1
+	  }
+	}
+	Line {
+	  SrcBlock		  "Abs"
+	  SrcPort		  1
+	  DstBlock		  "Individual sinusoid\nsmoother"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Switch"
+	  SrcPort		  1
+	  DstBlock		  "Signal jump \nsnubber"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Signal jump \nsnubber"
+	  SrcPort		  1
+	  DstBlock		  "Out1"
+	  DstPort		  1
+	}
+      }
+    }
+    Block {
+      BlockType		      Sum
+      Name		      "Noise Adder"
+      SID		      "82"
+      Ports		      [2, 1]
+      Position		      [505, 32, 535, 63]
+      ZOrder		      -2
+      InputSameDT	      off
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      SignalGenerator
+      Name		      "Signal\nGenerator"
+      SID		      "84"
+      Ports		      [0, 1]
+      Position		      [450, 55, 480, 85]
+      ZOrder		      -19
+      WaveForm		      "random"
+      Amplitude		      "0.2"
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Test signal"
+      SID		      "9"
+      Ports		      [0, 1]
+      Position		      [15, 52, 150, 128]
+      MinAlgLoopOccurrences   off
+      PropExecContextOutsideSubsystem off
+      RTWSystemCode	      "Auto"
+      FunctionWithSeparateData off
+      Opaque		      off
+      RequestExecContextInheritance off
+      MaskHideContents	      off
+      MaskPromptString	      "Sine frequency (Hz)|Envelope time points|Envelope values"
+      MaskStyleString	      "edit,edit,edit"
+      MaskVariables	      "sine_frequency=@1;env_time=@2;env_val=@3;"
+      MaskTunableValueString  "on,on,on"
+      MaskCallbackString      "||"
+      MaskEnableString	      "on,on,on"
+      MaskVisibilityString    "on,on,on"
+      MaskToolTipString	      "on,on,on"
+      MaskDisplay	      "x = [0 1 1+1e-6 2 2+1e-6 4 4+1e-6 6   6+1e-6 7];\ny = [0 0 1      1 0      0 0.5    0.5 0    "
+      "  0];\nx_interp = linspace(0, 7, 100);\ny_interp = interp1q(x', y', x_interp');\n\n\nplot(x_interp, y_interp.*si"
+      "n(x_interp*10*pi)')"
+      MaskIconFrame	      on
+      MaskIconOpaque	      on
+      MaskIconRotate	      "none"
+      MaskPortRotate	      "default"
+      MaskIconUnits	      "autoscale"
+      MaskValueString	      "100|[0 1 1 2 2 4 4    6    6 7]|[0 0 1 1 0 0 0.5 0.5 0 0]"
+      Port {
+	PortNumber		1
+	Name			"Original Signal"
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
       System {
 	Name			"Test signal"
-	Location		[409, 178, 624, 315]
-	Open			on
+	Location		[142, 244, 357, 398]
+	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -1019,8 +1488,8 @@ Model {
 	  LibraryVersion	  "1.260"
 	  SourceBlock		  "simulink/Sources/Repeating\nSequence"
 	  SourceType		  "Repeating table"
-	  rep_seq_t		  "[0 1 1 2 2 4 4    6    6 7]"
-	  rep_seq_y		  "[0 0 1 1 0 0 0.5 0.5 0 0]"
+	  rep_seq_t		  "env_time"
+	  rep_seq_y		  "env_val"
 	}
 	Block {
 	  BlockType		  Sin
@@ -1029,7 +1498,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [25, 25, 55, 55]
 	  ZOrder		  -21
-	  Frequency		  "10*2*pi"
+	  Frequency		  "sine_frequency*2*pi"
 	  SampleTime		  "0"
 	}
 	Block {
@@ -1061,31 +1530,138 @@ Model {
       }
     }
     Line {
+      Name		      "Original Signal"
       SrcBlock		      "Test signal"
       SrcPort		      1
-      Points		      [15, 0]
+      Points		      [5, 0]
       Branch {
-	DstBlock		"Compressor"
+	Points			[5, 0; 0, -60]
+	DstBlock		"Compressor Product"
 	DstPort			1
       }
       Branch {
-	Points			[0, 60]
+	Points			[5, 0]
+	Branch {
+	  DstBlock		  "Compressor envelope generator "
+	  DstPort		  1
+	}
+	Branch {
+	  Labels		  [2, 0]
+	  Points		  [0, 60]
+	  DstBlock		  "Bus\nCreator"
+	  DstPort		  3
+	}
+      }
+    }
+    Line {
+      SrcBlock		      "Compressor envelope generator "
+      SrcPort		      1
+      Points		      [25, 0]
+      Branch {
+	Points			[0, -45]
+	DstBlock		"Compressor Product"
+	DstPort			2
+      }
+      Branch {
+	Points			[0, 50]
 	DstBlock		"Bus\nCreator"
 	DstPort			2
       }
     }
     Line {
-      SrcBlock		      "Compressor"
+      SrcBlock		      "Bus\nCreator"
       SrcPort		      1
-      Points		      [15, 0; 0, 40]
-      DstBlock		      "Bus\nCreator"
+      DstBlock		      "Compressor Scope"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Bus\nCreator"
+      Labels		      [2, 0]
+      SrcBlock		      "Compressor Product"
       SrcPort		      1
-      DstBlock		      "Scope"
+      Points		      [35, 0; 0, 0]
+      Branch {
+	Points			[0, 90]
+	DstBlock		"Bus\nCreator"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, 0]
+	DstBlock		"Noise Adder"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Expander envelope generator"
+      SrcPort		      1
+      Points		      [25, 0]
+      Branch {
+	Points			[0, -40]
+	DstBlock		"Expander Product"
+	DstPort			2
+      }
+      Branch {
+	Points			[0, 45]
+	DstBlock		"Bus\nCreator1"
+	DstPort			2
+      }
+    }
+    Line {
+      SrcBlock		      "Bus\nCreator1"
+      SrcPort		      1
+      DstBlock		      "Expander Scope"
       DstPort		      1
     }
+    Line {
+      Labels		      [1, 0]
+      SrcBlock		      "Expander Product"
+      SrcPort		      1
+      DstBlock		      "Bus\nCreator1"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Signal\nGenerator"
+      SrcPort		      1
+      Points		      [0, -15]
+      DstBlock		      "Noise Adder"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Noise Adder"
+      SrcPort		      1
+      Points		      [25, 0]
+      Branch {
+	DstBlock		"Expander Product"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, 55]
+	DstBlock		"Expander envelope generator"
+	DstPort			1
+      }
+    }
+  }
+}
+# Finite State Machines
+#
+#    Stateflow Version 7.6 (R2011b) dated Jan 25 2012, 12:15:34
+#
+#
+
+
+Stateflow {
+  machine {
+    id			    1
+    name		    "LD1"
+    created		    "28-Jan-2015 14:19:29"
+    isLibrary		    0
+    firstTarget		    2
+    sfVersion		    76014001.00040001
+  }
+  target {
+    id			    2
+    name		    "sfun"
+    description		    "Default Simulink S-Function Target."
+    machine		    1
+    linkNode		    [1 0 0]
   }
 }
